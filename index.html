@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset = "utf-8">
+	<title>Markov Word Generator</title>
+	<meta name = "description" content = "Generate random words with a Markov chain.">
+	
+	<!-- CoffeeScript. -->
+	<script src = "http://coffeescript.org/extras/coffee-script.js"></script>
+	
+	<!-- jQuery. -->
+	<script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<!-- Twitter Bootstrap. -->
+	<link rel = "stylesheet" href = "http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<script src = "http://netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+	
+	<style>
+		#corpusInput
+		{
+			resize: vertical;
+		}
+		
+		#corpora a { cursor: pointer; }
+	</style>
+</head>
+
+<body>
+	<div class = "jumbotron">
+		<div class = "container">
+			<h1>
+				<small>Your word is:</small>
+				
+				<br class = "visible-xs">
+				<!-- The conditionally-visible <br> tag here is the easiest way
+				to ensure that, on small screens, the generated word
+				consistently appears on its own line regardless of its
+				length.  I can't be bothered to deal with CSS media queries for
+				this.  -->
+					
+				<span id = "word"></span>
+			</h1>
+			
+			<button id = "button" class = "btn btn-lg btn-primary">
+				Generate another!
+			</button>
+		</div>
+	</div>
+	
+	<div class = "container">
+		<h2>Corpus</h2>
+		<p>The <i>corpus</i> is a sample of real words that's used as a starting point to generate new words.  Generated words will be somewhat similar to the original ones from the corpus.</p>
+		<div class = "form-horizontal">
+			<div class = "form-group">
+				<label class = "control-label col-sm-3">Use a preset:</label>
+				
+				<!-- Corpus preset dropdown button. -->
+				<div class = "btn-group col-sm-1">
+					<button id = "corpusButton" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown">
+						<span id = "corpusName"></span>
+						<span class = "caret"></span>
+					</button>
+					
+					<ul id = "corpora" class = "dropdown-menu">
+					</ul>
+				</div>
+			</div>
+			
+			<div class = "form-group">
+				<label for = "corpusInput" class = "control-label col-sm-3">Or input your own:</label>
+				
+				<!-- Corpus raw text input area. -->
+				<div class = "col-sm-6">
+					<textarea id = "corpusInput" class = "form-control col-xs-2" rows = "5" spellcheck = "false"></textarea>
+				</div>
+				
+				
+				<div class = "col-sm-3">
+					<div class = "help-block">
+						Use spaces or line breaks to separate words.  Capitalization, punctuation, numbers and special characters are ignored.
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type = "text/coffeescript" src = "WordGenerator.coffee">
+	</script>
+</body>
+
+</html>
