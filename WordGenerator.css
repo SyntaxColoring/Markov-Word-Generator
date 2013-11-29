@@ -1,0 +1,10 @@
+#corpusInput
+{
+	/* The layout can get really screwed up if the user resizes the
+	   <textarea> horizontally. */
+	resize: vertical;
+}
+
+/* Since the <a> tags in the corpus dropdown list don't actually "go" anywhere,
+   they won't have the pointer cursor unless it's explicitly set here. */		
+#corpora a { cursor: pointer; }

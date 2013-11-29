@@ -100,37 +100,38 @@ generate = (maxLength, model, n=3) ->
 	
 ### UI and Initialization: ###
 
-$word = $("#word")
-$button = $("#button")
-$corpusName = $("#corpusName")
-$corpora = $("#corpora")
-$corpusInput = $("#corpusInput")
+$ ->
+	$word = $("#word")
+	$button = $("#button")
+	$corpusName = $("#corpusName")
+	$corpora = $("#corpora")
+	$corpusInput = $("#corpusInput")
 
-selectCorpus = (index) ->
-	$corpusName.text(corpora[index].name)
-	$corpusInput.val(corpora[index].content)
-	calculatedSequences = sequences corpora[index].content
-	calculatedNgrams = ngrams 3, calculatedSequences...
-	calculatedModel = model calculatedNgrams...
-	console.log "Calculated new model:"
-	console.log calculatedModel
-	$button.unbind("click").click ->
-		$word.text(generate 8, calculatedModel)
+	selectCorpus = (index) ->
+		$corpusName.text(corpora[index].name)
+		$corpusInput.val(corpora[index].content)
+		calculatedSequences = sequences corpora[index].content
+		calculatedNgrams = ngrams 3, calculatedSequences...
+		calculatedModel = model calculatedNgrams...
+		console.log "Calculated new model:"
+		console.log calculatedModel
+		$button.unbind("click").click ->
+			$word.text(generate 8, calculatedModel)
 
-selectCorpus 0
+	selectCorpus 0
 
-# Populate the dropdown list of presets.
-for corpus, index in corpora
-	do (corpus, index) ->
-		if index is corpora.length - 1
-			$corpora.append('<li class = "divider">')
-		newLink = $("<a>#{corpus.name}</a>")
-		newLink.click(-> selectCorpus index)
-		$("<li>").append(newLink).appendTo($corpora)
+	# Populate the dropdown list of presets.
+	for corpus, index in corpora
+		do (corpus, index) ->
+			if index is corpora.length - 1
+				$corpora.append('<li class = "divider">')
+			newLink = $("<a>#{corpus.name}</a>")
+			newLink.click(-> selectCorpus index)
+			$("<li>").append(newLink).appendTo($corpora)
 
-# If the user types in the <textarea>, copy the updates into the custom
-# corpus and select that as the active corpus.
-$corpusInput.on "input propertychange", ->
-	text = $corpusInput.val();
-	corpora[corpora.length-1].content = $corpusInput.val();
-	selectCorpus corpora.length-1;
+	# If the user types in the <textarea>, copy the updates into the custom
+	# corpus and select that as the active corpus.
+	$corpusInput.on "input propertychange", ->
+		text = $corpusInput.val();
+		corpora[corpora.length-1].content = $corpusInput.val();
+		selectCorpus corpora.length-1;

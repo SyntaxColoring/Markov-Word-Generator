@@ -6,24 +6,17 @@
 	<title>Markov Word Generator</title>
 	<meta name = "description" content = "Generate random words with a Markov chain.">
 	
-	<!-- CoffeeScript. -->
-	<script src = "http://coffeescript.org/extras/coffee-script.js"></script>
-	
-	<!-- jQuery. -->
-	<script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-
-	<!-- Twitter Bootstrap. -->
+	<!-- Bootstrap and custom CSS. -->
 	<link rel = "stylesheet" href = "http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	<link rel = "stylesheet" href = "WordGenerator.css">
+	
+	<!-- jQuery and Bootstrap JS. -->
+	<script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src = "http://netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
 	
-	<style>
-		#corpusInput
-		{
-			resize: vertical;
-		}
-		
-		#corpora a { cursor: pointer; }
-	</style>
+	<!-- CoffeeScript. -->
+	<script src = "http://coffeescript.org/extras/coffee-script.js"></script>
+	<script type = "text/coffeescript" src = "WordGenerator.coffee"></script>
 </head>
 
 <body>
@@ -84,9 +77,6 @@
 			</div>
 		</div>
 	</div>
-	
-	<script type = "text/coffeescript" src = "WordGenerator.coffee">
-	</script>
 </body>
 
 </html>
