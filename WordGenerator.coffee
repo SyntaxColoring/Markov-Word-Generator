@@ -27,10 +27,9 @@ corpora = [
 corpora = ({ name: x, content: corpora[i+1] } for x, i in corpora by 2)
 
 
-### Logic: ###
+### Markov Chain Logic: ###
 
-	# Returns an array of sequences (i.e. words) derived from a raw
-	# input string.
+	# Splits a raw input string into an array of sequences (i.e., words).
 sequences = (rawInput) ->
 	rawInput.toLowerCase().replace(/[^a-z\s]/g, "").split(/\s/g)
 	
@@ -44,60 +43,72 @@ ngrams = (n, sequences...) ->
 			result.push sequence[i..i+n-1]
 	result
 
-	# Returns a probability tree derived from the supplied n-grams.
+	# Builds and returns a probability tree from the supplied n-grams.
+	# 
+	# Each node of the tree has the following properties:
+	# frequency - The frequency (0.0 to 1.0) of this node's occurrence, given the occurrence of its parent.
+	# count     - The number of times this node occurred, given that its parent occurred.
+	# children  - An object containing this node's children.
 model = (ngrams...) ->
-	root = { children: {}, count: ngrams.length}
+	root = { children: {}, count: ngrams.length, frequency: 1.0 }
+	
+	# Build the tree and supply each node with its count property.
 	for ngram in ngrams
 		base = root
-		for element in ngram
-			if not base.children[element]?
+		for element in ngram # In our case, each "element" is really a letter.
+			unless base.children[element]?
 				# If we need to create a new node, do so.
 				base.children[element] = { children: {}, count: 0 }
 			base = base.children[element]
 			base.count++
 	
-		# Recursively adds a "frequency" property to all children.
+	# Recursively descend through the tree we just built and give each node its
+	# frequency property.
 	normalize = (parent) ->
-		hasChildren = false
 		for childName, child of parent.children
-				hasChildren = true
 				child.frequency = child.count / parent.count
 				normalize child
-		parent.children = null unless hasChildren
 	
 	normalize root
 	
 	root
 
-# Generates a pseudorandom sequence (word) using the given model.
+	# Generates a pseudorandom sequence (word) using the given model.
 generate = (maxLength, model, n=3) ->
-	console.log "The generate() function was passed this model:"
-	console.log model
-	randomChildName = (parent) ->
+		# Pseudorandomly picks an element from containingObject with respect
+		# to each element's frequency property.
+	pickElement = (containingObject) ->
 		target = Math.random()
 		sum = 0.0
-		for childName, child of parent.children
-			sum += child.frequency
-			if sum >= target then return childName
+		for elementName, element of containingObject
+			sum += element.frequency
+			if sum >= target then return elementName
 	
-	getParent = (history) ->
-		parent = model
-		for element in history
-			if parent.children[element]
-				parent = parent.children[element]
-			else
-				return null
-		parent
+		# Returns the node of the probability tree (generate's "model" argument)
+		# that represents the supplied sequence.  If no such node exists,
+		# returns null.
+	node = (sequence) ->
+		result = model
+		for element in sequence
+			result = result.children[element]
+			unless result? then return null
+		result
 	
-	parent = model
 	result = ""
+	parent = model
 	
 	until result.length >= maxLength or parent is null
-		result += randomChildName parent
-		parent = getParent result[Math.max(0, result.length-n+1)..result.length-1]
+		result += pickElement parent.children
+		
+		# Draw up to n elements from the end of what we've generated so far
+		# to use as history in pseudorandomly selecting the next element.
+		history = result[Math.max(0, result.length-n+1)..result.length-1]
+		
+		parent = node history
 	
 	result
-	
+
+
 ### UI and Initialization: ###
 
 $ ->
@@ -106,20 +117,21 @@ $ ->
 	$corpusName = $("#corpusName")
 	$corpora = $("#corpora")
 	$corpusInput = $("#corpusInput")
-
+	
+	capitalize = (string) -> string[0].toUpperCase() + string.slice(1)
+	
 	selectCorpus = (index) ->
 		$corpusName.text(corpora[index].name)
 		$corpusInput.val(corpora[index].content)
 		calculatedSequences = sequences corpora[index].content
 		calculatedNgrams = ngrams 3, calculatedSequences...
 		calculatedModel = model calculatedNgrams...
-		console.log "Calculated new model:"
-		console.log calculatedModel
 		$button.unbind("click").click ->
-			$word.text(generate 8, calculatedModel)
-
+			$word.text capitalize generate 8, calculatedModel
+		$button.click()
+			
 	selectCorpus 0
-
+	
 	# Populate the dropdown list of presets.
 	for corpus, index in corpora
 		do (corpus, index) ->
@@ -128,7 +140,7 @@ $ ->
 			newLink = $("<a>#{corpus.name}</a>")
 			newLink.click(-> selectCorpus index)
 			$("<li>").append(newLink).appendTo($corpora)
-
+	
 	# If the user types in the <textarea>, copy the updates into the custom
 	# corpus and select that as the active corpus.
 	$corpusInput.on "input propertychange", ->
