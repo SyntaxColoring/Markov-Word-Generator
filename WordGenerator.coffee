@@ -76,7 +76,8 @@ model = (ngrams...) ->
 	# Generates a pseudorandom sequence (word) using the given model.
 generate = (maxLength, model, n=3) ->
 		# Pseudorandomly picks an element from containingObject with respect
-		# to each element's frequency property.
+		# to each element's frequency property.  If containingObject has no
+		# elements, returns null.
 	pickElement = (containingObject) ->
 		target = Math.random()
 		sum = 0.0
@@ -84,7 +85,7 @@ generate = (maxLength, model, n=3) ->
 			sum += element.frequency
 			if sum >= target then return elementName
 	
-		# Returns the node of the probability tree (generate's "model" argument)
+		# Returns the node of the probability tree (generate()'s "model" argument)
 		# that represents the supplied sequence.  If no such node exists,
 		# returns null.
 	node = (sequence) ->
@@ -94,7 +95,12 @@ generate = (maxLength, model, n=3) ->
 			unless result? then return null
 		result
 	
+	# Don't bother trying to generate a sequence if there's nothing to generate
+	# it from.
+	if model.count is 0 then return ""
+	
 	result = ""
+	
 	parent = model
 	
 	until result.length >= maxLength or parent is null
@@ -122,7 +128,10 @@ $ ->
 	maxLength = 8
 	currentModel = null
 	
-	capitalize = (string) -> string[0].toUpperCase() + string.slice(1)
+	capitalize = (string) ->
+		if string.length > 0
+			string[0].toUpperCase() + string.slice(1)
+		else ""
 	
 	generateAndShow = ->
 		$word.text capitalize generate maxLength, currentModel, n
