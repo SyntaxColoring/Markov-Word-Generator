@@ -118,19 +118,25 @@ $ ->
 	$corpora = $("#corpora")
 	$corpusInput = $("#corpusInput")
 	
+	n = 3
+	maxLength = 8
+	currentModel = null
+	
 	capitalize = (string) -> string[0].toUpperCase() + string.slice(1)
+	
+	generateAndShow = ->
+		$word.text capitalize generate maxLength, currentModel, n
 	
 	selectCorpus = (index) ->
 		$corpusName.text(corpora[index].name)
 		$corpusInput.val(corpora[index].content)
 		calculatedSequences = sequences corpora[index].content
-		calculatedNgrams = ngrams 3, calculatedSequences...
-		calculatedModel = model calculatedNgrams...
-		$button.unbind("click").click ->
-			$word.text capitalize generate 8, calculatedModel
-		$button.click()
+		calculatedNgrams = ngrams n, calculatedSequences...
+		currentModel = model calculatedNgrams...
+		$button.unbind("click").click (generateAndShow)
 			
 	selectCorpus 0
+	generateAndShow()
 	
 	# Populate the dropdown list of presets.
 	for corpus, index in corpora
