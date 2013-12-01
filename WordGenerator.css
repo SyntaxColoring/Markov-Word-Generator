@@ -1,10 +1,28 @@
 #corpusInput
 {
-	/* The layout can get really screwed up if the user resizes the
-	   <textarea> horizontally. */
+	/*
+	The layout can get really screwed up if the user resizes the
+	<textarea> horizontally.
+	*/
 	resize: vertical;
 }
 
-/* Since the <a> tags in the corpus dropdown list don't actually "go" anywhere,
-   they won't have the pointer cursor unless it's explicitly set here. */		
+/*
+Since the <a> tags in the corpus dropdown list don't actually "go" anywhere,
+they won't have the pointer cursor unless it's explicitly set here.
+*/		
 #corpora a { cursor: pointer; }
+
+/*
+Ensure that on small screens, the generated word consistently appears on its
+own line.  Otherwise, the generate button could jump around the screen when
+new words are displayed and the text wrapping changes.  (767px corresponds to
+Bootstrap's transition between xs and sm styles.)
+*/
+@media (max-width: 767px)
+{
+	#word
+	{
+		display: block;
+	}
+}
