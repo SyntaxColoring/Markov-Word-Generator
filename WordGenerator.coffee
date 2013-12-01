@@ -152,8 +152,8 @@ $ ->
 		do (corpus, index) ->
 			if index is corpora.length - 1
 				$corpora.append('<li class = "divider">')
-			newLink = $("<a>#{corpus.name}</a>")
-			newLink.click(-> selectCorpus index)
+			newLink = $("<a href = \"#\">#{corpus.name}</a>")
+			newLink.click((event) -> event.preventDefault(); selectCorpus index)
 			$("<li>").append(newLink).appendTo($corpora)
 	
 	# If the user types in the <textarea>, copy the updates into the custom
