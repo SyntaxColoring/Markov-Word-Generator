@@ -5,7 +5,7 @@
 # the "custom" user-input corpus.
 corpora = [
 	"Astronomy"
-	"Sun\nMercury\nVenus\nEarth\nMars\nJupiter\nSaturn\nUranus\nNeptune\nPluto\nCeres\nPallas\nVesta\nHygiea\nInteramnia\nEuropa\nDavida\nSylvia\nCybele\nEunomia\nJuno\nEuphrosyne\nHektor\nThisbe\nBamberga\nPatientia\nHerculina\nDoris\nUrsula\nCamilla\nEugenia\nIris\nAmphitrite"
+	"Sun Mercury Venus Earth Mars Jupiter Saturn Uranus Neptune Pluto Ceres Pallas Vesta Hygiea Interamnia Europa Davida Sylvia Cybele Eunomia Juno Euphrosyne Hektor Thisbe Bamberga Patientia Herculina Doris Ursula Camilla Eugenia Iris Amphitrite"
 	
 	"Shakespeare"
 	"Two households, both alike in dignity,\nIn fair Verona, where we lay our scene,\nFrom ancient grudge break to new mutiny,\nWhere civil blood makes civil hands unclean.\nFrom forth the fatal loins of these two foes\nA pair of star-cross'd lovers take their life;\nWhose misadventured piteous overthrows\nDo with their death bury their parents' strife.\nThe fearful passage of their death-mark'd love,\nAnd the continuance of their parents' rage,\nWhich, but their children's end, nought could remove,\nIs now the two hours' traffic of our stage;\nThe which if you with patient ears attend,\nWhat here shall miss, our toil shall strive to mend."
