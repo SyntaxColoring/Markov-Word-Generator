@@ -5,7 +5,7 @@
 # the "custom" user-input corpus.
 corpora = [
 	"Astronomy"
-	"Sun mercury venus earth mars jupiter saturn uranus neptune pluto sun ceres pallas vesta hygiea interamnia europa davida sylvia cybele eunomia juno euphrosyne hektor thisbe bamberga patientia herculina doris ursula camilla eugenia iris amphitrite"
+	"Sun\nMercury\nVenus\nEarth\nMars\nJupiter\nSaturn\nUranus\nNeptune\nPluto\nCeres\nPallas\nVesta\nHygiea\nInteramnia\nEuropa\nDavida\nSylvia\nCybele\nEunomia\nJuno\nEuphrosyne\nHektor\nThisbe\nBamberga\nPatientia\nHerculina\nDoris\nUrsula\nCamilla\nEugenia\nIris\nAmphitrite"
 	
 	"Shakespeare"
 	"Two households, both alike in dignity,\nIn fair Verona, where we lay our scene,\nFrom ancient grudge break to new mutiny,\nWhere civil blood makes civil hands unclean.\nFrom forth the fatal loins of these two foes\nA pair of star-cross'd lovers take their life;\nWhose misadventured piteous overthrows\nDo with their death bury their parents' strife.\nThe fearful passage of their death-mark'd love,\nAnd the continuance of their parents' rage,\nWhich, but their children's end, nought could remove,\nIs now the two hours' traffic of our stage;\nThe which if you with patient ears attend,\nWhat here shall miss, our toil shall strive to mend."
@@ -123,10 +123,18 @@ $ ->
 	$corpusName = $("#corpusName")
 	$corpora = $("#corpora")
 	$corpusInput = $("#corpusInput")
+	$order = $("#order")
+	$maxLength = $("#maxLength")
 	
-	n = 3
-	maxLength = 8
+	corpusIndex = null
+	n = null
+	maxLength = null
 	currentModel = null
+	
+	rebuild = ->
+		calculatedSequences = sequences corpora[corpusIndex].content
+		calculatedNgrams = ngrams n, calculatedSequences...
+		currentModel = model calculatedNgrams...
 	
 	capitalize = (string) ->
 		if string.length > 0
@@ -137,15 +145,12 @@ $ ->
 		$word.text capitalize generate maxLength, currentModel, n
 	
 	selectCorpus = (index) ->
+		corpusIndex = index
+		rebuild()
 		$corpusName.text(corpora[index].name)
 		$corpusInput.val(corpora[index].content)
-		calculatedSequences = sequences corpora[index].content
-		calculatedNgrams = ngrams n, calculatedSequences...
-		currentModel = model calculatedNgrams...
 		$button.unbind("click").click (generateAndShow)
-			
 	selectCorpus 0
-	generateAndShow()
 	
 	# Populate the dropdown list of presets.
 	for corpus, index in corpora
@@ -162,3 +167,16 @@ $ ->
 		text = $corpusInput.val();
 		corpora[corpora.length-1].content = $corpusInput.val();
 		selectCorpus corpora.length-1;
+		rebuild()
+	
+	$order.change ->
+		n = (+(@value) or 0) + 1
+		rebuild()
+	$order.change()
+	
+	$maxLength.change ->
+		maxLength = (+(@value) or 1)
+		rebuild()
+	$maxLength.change()
+	
+	generateAndShow()

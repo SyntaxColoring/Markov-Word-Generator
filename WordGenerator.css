@@ -20,3 +20,11 @@ Bootstrap's transition between xs and sm styles.)
 		display: block;
 	}
 }
+
+@media (max-width: 991px)
+{
+	.page-header small
+	{
+		display: block
+	}
+}

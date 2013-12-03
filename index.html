@@ -22,6 +22,15 @@
 </head>
 
 <body>
+	<div class = "container">
+		<div class = "page-header">
+			<h1>
+				Markov Word Generator
+				<small>for producing partly-random, partly-legible words</small>
+			</h1>
+		</div>
+	</div>
+	
 	<div class = "jumbotron">
 		<div class = "container">
 			<h1>
@@ -36,38 +45,65 @@
 	</div>
 	
 	<div class = "container">
-		<h2>Corpus</h2>
-		<p>The <i>corpus</i> is a sample of real words that's used as a starting point to generate new words.  Generated words will be somewhat similar to the original ones from the corpus.</p>
-		<div class = "form-horizontal">
-			<div class = "form-group">
-				<label class = "control-label col-sm-3">Use a preset:</label>
-				
-				<!-- Corpus preset dropdown button. -->
-				<div class = "btn-group col-sm-1">
-					<button id = "corpusButton" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown">
-						<span id = "corpusName">Loading...</span>
-						<span class = "caret"></span>
-					</button>
-					
-					<ul id = "corpora" class = "dropdown-menu">
-					</ul>
-				</div>
-			</div>
-			
-			<div class = "form-group">
-				<label for = "corpusInput" class = "control-label col-sm-3">Or input your own:</label>
-				
-				<!-- Corpus raw text input area. -->
-				<div class = "col-sm-6">
-					<textarea id = "corpusInput" class = "form-control col-xs-2" rows = "5" spellcheck = "false"></textarea>
-				</div>
-				
-				
-				<div class = "col-sm-3">
-					<div class = "help-block">
-						Use spaces or line breaks to separate words.  Capitalization, punctuation, numbers and special characters are ignored.
+		<div class = "col-sm-9">
+			<h2>Edit Corpus</h2>
+			<p>The <i>corpus</i> is a sample of real words that's used as a starting point to generate new words.  Generated words will be somewhat similar to the original ones from the corpus.</p>
+			<div class = "form-horizontal">
+				<div class = "form-group">
+					<label class = "control-label col-sm-3">Use a preset:</label>
+					<!-- Corpus preset dropdown button. -->
+					<div class = "btn-group col-sm-1">
+						<button id = "corpusButton" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown">
+							<span id = "corpusName">Loading...</span>
+							<span class = "caret"></span>
+						</button>
+						
+						<ul id = "corpora" class = "dropdown-menu">
+						</ul>
 					</div>
 				</div>
+				
+				<div class = "form-group">
+					<label for = "corpusInput" class = "control-label col-sm-3">Or input your own:</label>
+					
+					<!-- Corpus raw text input area. -->
+					<div class = "col-sm-9">
+						<textarea id = "corpusInput" class = "form-control col-xs-2" rows = "5" spellcheck = "false"></textarea>
+					</div>
+					
+					
+					<div class = "col-sm-9 col-sm-offset-3">
+						<div class = "help-block">
+							Use spaces or line breaks to separate words.  Capitalization, punctuation, numbers and special characters are ignored.
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class = "col-sm-3">
+			<h2>Tweak Settings</h2>
+			<div>
+				<div class="form-group">
+					<label for = "order" class = "control-label">Markov order</label>
+					<div class = "input-group">
+						<span class = "input-group-addon"><i>n</i> =</span>
+						<input type = "number" min = "0" max = "4" value = "2" id="order" class = "form-control">
+					</div>
+					<div class = "help-block">
+						Low values produce more random words, while high values produce more legible words.
+					</div>
+			 	</div>
+				<div class="form-group">
+					<label for="maxLength" class = "control-label">Maximum length</label>
+					<div class = "input-group">
+						<input type = "number" min = "1" max = "11" value = "8" id="maxLength" class = "form-control">
+						<span class = "input-group-addon">letters</span>
+					</div>
+					<div class = "help-block">
+						Words will be truncated to this length.
+					</div>
+			 	</div>
 			</div>
 		</div>
 	</div>
