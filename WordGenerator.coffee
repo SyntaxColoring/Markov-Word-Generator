@@ -27,94 +27,6 @@ corpora = [
 corpora = ({ name: x, content: corpora[i+1] } for x, i in corpora by 2)
 
 
-### Markov Chain Logic: ###
-
-	# Splits a raw input string into an array of sequences (i.e., words).
-sequences = (rawInput) ->
-	rawInput.toLowerCase().replace(/[^a-z\s]/g, "").split(/\s/g)
-	
-	# Returns a flat array of all the n-grams in sequences.  N-grams do
-	# not cross sequence boundaries.  For example:
-	# ngrams 3, "abcde", "fghi" is ["abc", "bcd", "cde", "fgh", "ghi"]
-ngrams = (n, sequences...) ->
-	result = []
-	for sequence in sequences when sequence.length >= n
-		for i in [0..sequence.length-n]
-			result.push sequence[i..i+n-1]
-	result
-
-	# Builds and returns a probability tree from the supplied n-grams.
-	# 
-	# Each node of the tree has the following properties:
-	# frequency - The frequency (0.0 to 1.0) of this node's occurrence, given the occurrence of its parent.
-	# count     - The number of times this node occurred, given that its parent occurred.
-	# children  - An object containing this node's children.
-model = (ngrams...) ->
-	root = { children: {}, count: ngrams.length, frequency: 1.0 }
-	
-	# Build the tree and supply each node with its count property.
-	for ngram in ngrams
-		base = root
-		for element in ngram # In our case, each "element" is really a letter.
-			unless base.children[element]?
-				# If we need to create a new node, do so.
-				base.children[element] = { children: {}, count: 0 }
-			base = base.children[element]
-			base.count++
-	
-	# Recursively descend through the tree we just built and give each node its
-	# frequency property.
-	normalize = (parent) ->
-		for childName, child of parent.children
-				child.frequency = child.count / parent.count
-				normalize child
-	
-	normalize root
-	
-	root
-
-	# Generates a pseudorandom sequence (word) using the given model.
-generate = (maxLength, model, n=3) ->
-		# Pseudorandomly picks an element from containingObject with respect
-		# to each element's frequency property.  If containingObject has no
-		# elements, returns null.
-	pickElement = (containingObject) ->
-		target = Math.random()
-		sum = 0.0
-		for elementName, element of containingObject
-			sum += element.frequency
-			if sum >= target then return elementName
-	
-		# Returns the node of the probability tree (generate()'s "model" argument)
-		# that represents the supplied sequence.  If no such node exists,
-		# returns null.
-	node = (sequence) ->
-		result = model
-		for element in sequence
-			result = result.children[element]
-			unless result? then return null
-		result
-	
-	# Don't bother trying to generate a sequence if there's nothing to generate
-	# it from.
-	if model.count is 0 then return ""
-	
-	result = ""
-	
-	parent = model
-	
-	until result.length >= maxLength or parent is null
-		result += pickElement parent.children
-		
-		# Draw up to n elements from the end of what we've generated so far
-		# to use as history in pseudorandomly selecting the next element.
-		history = result[Math.max(0, result.length-n+1)..result.length-1]
-		
-		parent = node history
-	
-	result
-
-
 ### UI and Initialization: ###
 
 $ ->
@@ -126,15 +38,11 @@ $ ->
 	$order = $("#order")
 	$maxLength = $("#maxLength")
 	
-	corpusIndex = null
-	n = null
-	maxLength = null
-	currentModel = null
+	markovChain = new window.Markov
+	maxLength = 0
 	
-	rebuild = ->
-		calculatedSequences = sequences corpora[corpusIndex].content
-		calculatedNgrams = ngrams n, calculatedSequences...
-		currentModel = model calculatedNgrams...
+	words = (rawInput) ->
+		rawInput.toLowerCase().replace(/[^a-z\s]/g, "").split(/\s/g)
 	
 	capitalize = (string) ->
 		if string.length > 0
@@ -142,13 +50,12 @@ $ ->
 		else ""
 	
 	generateAndShow = ->
-		$word.text capitalize generate maxLength, currentModel, n
+		$word.text capitalize markovChain.generate(maxLength).join("")
 	
 	selectCorpus = (index) ->
-		corpusIndex = index
-		rebuild()
 		$corpusName.text(corpora[index].name)
 		$corpusInput.val(corpora[index].content)
+		markovChain.sequences = words corpora[index].content
 		$button.unbind("click").click (generateAndShow)
 	selectCorpus 0
 	
@@ -167,16 +74,15 @@ $ ->
 		text = $corpusInput.val();
 		corpora[corpora.length-1].content = $corpusInput.val();
 		selectCorpus corpora.length-1;
-		rebuild()
 	
 	$order.change ->
-		n = (+(@value) or 0) + 1
-		rebuild()
+		markovChain.n = +(@value)
+		@value = markovChain.n
 	$order.change()
 	
 	$maxLength.change ->
-		maxLength = (+(@value) or 1)
-		rebuild()
+		maxLength = Math.max +(@value), 1
+		@value = maxLength
 	$maxLength.change()
 	
 	generateAndShow()
