@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class Markov
 	# Creates a new Markov chain from the given array of sequences
-	# (to use as a corpus) and value for n (to use as the Markov order).
+	# (to collectively use as a corpus) and value for n (to use as the Markov order).
 	# sequences may be empty. n must be an integer no lower than 0.
 	# Feel free to directly access and modify an object's .sequences and .n.
 	constructor: (@sequences = [], @n = 2) ->
