@@ -75,11 +75,12 @@ You can directly modify these properties later in your code, if you need to.  Th
 
 Generation
 ----------
-Make the Markov chain do something useful with `.generate()`.
+Make the Markov chain do something useful with `.generate()`  Note that it returns
+an array, so if you want a string you'll have to use `.join("")`.
 
 	markov = new window.Markov ["sassafras", "mississippi"]
-	alert markov.generate() # Alerted "rassippi".
-	alert markov.generate() # Alerted "frassissafrassippi".
+	alert markov.generate().join("") # Alerted "rassippi".
+	alert markov.generate().join("") # Alerted "frassissafrassippi".
 
 `.generate()` takes an optional maximum length parameter, e.g. `markov.generate(10)` to
 limit generated words to 10 characters long.  If unspecified, it defaults to 20 elements.
@@ -87,7 +88,7 @@ There always needs to be a maximum length, because otherwise, things like this
 could result in infinite loops:
 
 	markov = new window.Markov ["abba"], 1
-	alert markov.generate() # "bbababbabbbbababababbbabababababbabbbbabbbabababab..."
+	alert markov.generate().join("") # "bbababbabbbbababababbbabababababbabbbbabbbabababab..."
 
 Other Stuff
 -----------
