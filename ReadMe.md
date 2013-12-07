@@ -23,6 +23,9 @@ Contributions
 =============
 Please contribute.  I'm so lonely.
 
+Report issues [here](https://github.com/SyntaxColoring/Markov-Word-Generator/issues)
+and I'll gladly look into them.
+
 [Markov.coffee](Markov.coffee)
 ==============================
 The back-end logic for managing the Markov chain is available as a standalone
