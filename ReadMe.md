@@ -99,6 +99,6 @@ The `Markov` class supports other methods, too.  I won't describe them all in
 detail here, but you can read about how they work in [the source](Markov.coffee)
 if you're interested.
 
-- `.ngrams()` gives you the raw list of [n-grams]( used to build the chain.
+- `.ngrams()` gives you the raw list of [n-grams](https://en.wikipedia.org/wiki/N-gram) used to build the chain.
 - `.tree()` gives you a probability tree representing the n-grams.
 - `.continue(sequence)` gives you a single next element to continue `sequence`.
