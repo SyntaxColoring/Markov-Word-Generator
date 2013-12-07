@@ -78,7 +78,7 @@ You can directly modify these properties later in your code, if you need to.  Th
 
 Generation
 ----------
-Make the Markov chain do something useful with `.generate()`  Note that it returns
+Make the Markov chain do something useful with `.generate()`.  Note that it returns
 an array, so if you want a string you'll have to use `.join("")`.
 
 	markov = new window.Markov ["sassafras", "mississippi"]
