@@ -27,8 +27,7 @@ corpora = [
 corpora = ({ name: x, content: corpora[i+1] } for x, i in corpora by 2)
 
 
-### UI and Initialization: ###
-
+### UI And Initialization: ###
 $ ->
 	$word = $("#word")
 	$button = $("#button")
@@ -38,35 +37,29 @@ $ ->
 	$order = $("#order")
 	$maxLength = $("#maxLength")
 	
-	markovChain = new window.Markov
-	maxLength = 0
-	
-	words = (rawInput) ->
+	parseWords = (rawInput) ->
 		rawInput.toLowerCase().replace(/[^a-z\s]/g, "").split(/\s/g)
 	
 	capitalize = (string) ->
-		if string.length > 0
-			string[0].toUpperCase() + string.slice(1)
+		if string.length > 0 then string[0].toUpperCase() + string.slice(1)
 		else ""
-	
-	generateAndShow = ->
-		$word.text capitalize markovChain.generate(maxLength).join("")
 	
 	selectCorpus = (index) ->
 		$corpusName.text(corpora[index].name)
 		$corpusInput.val(corpora[index].content)
-		markovChain.sequences = words corpora[index].content
-		$button.unbind("click").click (generateAndShow)
-	selectCorpus 0
+		markovChain.sequences = parseWords corpora[index].content
 	
-	# Populate the dropdown list of presets.
-	for corpus, index in corpora
-		do (corpus, index) ->
-			if index is corpora.length - 1
-				$corpora.append('<li class = "divider">')
-			newLink = $("<a href = \"#\">#{corpus.name}</a>")
-			newLink.click((event) -> event.preventDefault(); selectCorpus index)
-			$("<li>").append(newLink).appendTo($corpora)
+	populatePresetDropdown = ->
+		for corpus, index in corpora
+			do (corpus, index) ->
+				if index is corpora.length - 1
+					$corpora.append('<li class = "divider">')
+				newLink = $("<a href = \"#\">#{corpus.name}</a>")
+				newLink.click((event) -> event.preventDefault(); selectCorpus index)
+				$("<li>").append(newLink).appendTo($corpora)
+	
+	generateAndShow = ->
+		$word.text capitalize markovChain.generate().join("")
 	
 	# If the user types in the <textarea>, copy the updates into the custom
 	# corpus and select that as the active corpus.
@@ -76,13 +69,18 @@ $ ->
 		selectCorpus corpora.length-1;
 	
 	$order.change ->
-		markovChain.n = +(@value)
+		markovChain.n = +@value
 		@value = markovChain.n
-	$order.change()
 	
 	$maxLength.change ->
-		maxLength = Math.max +(@value), 1
-		@value = maxLength
-	$maxLength.change()
+		markovChain.maxLength = Math.max +@value , 1
+		@value = markovChain.maxLength
 	
+	$button.click generateAndShow
+	
+	markovChain = new Markov
+	populatePresetDropdown();
+	selectCorpus 0
+	$order.change()
+	$maxLength.change()
 	generateAndShow()

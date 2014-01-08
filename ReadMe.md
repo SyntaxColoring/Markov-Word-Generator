@@ -26,7 +26,7 @@ Please contribute.  I'm so lonely.
 Report issues [here](https://github.com/SyntaxColoring/Markov-Word-Generator/issues)
 and I'll gladly look into them.
 
-[Markov.coffee](Markov.coffee)
+[Markov.coffee](markov.coffee)
 ==============================
 The back-end logic for managing the Markov chain is available as a standalone
 CoffeeScript module.  It's flexible enough for you to use in your own project,
@@ -53,21 +53,23 @@ Setup
 -----
 After including the script, `Markov` objects can be constructed like this:
 
-    markov = new window.Markov ["sassafras", "mississippi"], 1
+    markov = new Markov ["sassafras", "mississippi"], 1
 	
 	# Or, on CommonJS:
-	# markov = new Markov.Markov ["sassafras", "mississippi"], 1
+	# Markov = require "./markov"
+	# markov = new Markov ["sassafras", "mississippi"], 1
 
 The first parameter to the constructor is an array of sequences.  The sequences
 are combined together to form the corpus.  The generator takes care not to link
 elements across sequence boundaries.  In the example above, the last S in *sassafras*
-is not associated with the M in *mississippi.*  If you really *do* want that to happen,
-here's how to do it:
+is not associated with the M in *mississippi.*  If you really *do* want those letters
+to be associated, here's how to do it:
 
-	markov = new window.Markov["sassafrasmississippi"], 1
+	markov = new Markov ["sassafrasmississippi"], 1
 
 The second parameter to the constructor is *n,* the *Markov order* - basically, how
-many previous elements the next element depends on.  Low values make the Markov chain more random, while high values make it stick closer to the corpus.
+many previous elements the next element depends on.  Low values make the Markov
+chain more random, while high values make it stick closer to the corpus.
 
 If left unspecified, the array of sequences defaults to `[]` and the Markov order defaults to `2`.
 
@@ -81,17 +83,17 @@ Generation
 Make the Markov chain do something useful with `.generate()`.  Note that it returns
 an array, so if you want a string you'll have to use `.join("")`.
 
-	markov = new window.Markov ["sassafras", "mississippi"]
-	alert markov.generate().join("") # Alerted "rassippi".
-	alert markov.generate().join("") # Alerted "frassissafrassippi".
+	markov = new Markov ["sassafras", "mississippi"]
+	alert markov.generate().join "" # Alerted "rassippi".
+	alert markov.generate().join "" # Alerted "frassissafrassippi".
 
 `.generate()` takes an optional maximum length parameter, e.g. `markov.generate(10)` to
 limit generated words to 10 characters long.  If unspecified, it defaults to 20 elements.
 There always needs to be a maximum length, because otherwise, things like this
 could result in infinite loops:
 
-	markov = new window.Markov ["abba"], 1
-	alert markov.generate().join("") # "bbababbabbbbababababbbabababababbabbbbabbbabababab..."
+	markov = new Markov ["abba"], 1
+	alert markov.generate().join "" # "bbababbabbbbababababbbabababababbabbbbabbbabababab..."
 
 Other Stuff
 -----------
