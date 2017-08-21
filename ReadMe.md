@@ -17,7 +17,7 @@ random *paragraphs,* but I couldn't find any good ones to generate random *words
 
 I probably got a little carried away with
 [CoffeeScript](https://github.com/jashkenas/coffee-script) and
-and [Bootstrap](https://github.com/twbs/bootstrap).
+[Bootstrap](https://github.com/twbs/bootstrap).
 
 Contributions
 =============
